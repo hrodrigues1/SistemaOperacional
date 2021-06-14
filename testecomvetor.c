@@ -48,7 +48,7 @@ Edition;
 // data read and array data alocation
 long readInput(struct books bookList[])
 {
-	FILE *file = fopen("teste100k.txt", "r");
+	FILE *file = fopen("teste10k.txt", "r");
 	if (file == NULL)
 	{
 		printf("Erro ao abrir o arquivo\n");
@@ -225,6 +225,7 @@ void titleFileGenerator(Books bookList[], long input){
                 	for (int k=0;k<30;k++){
                     	if(bookList[i].year == titles[j].year[k]){
 							printf("[%i].year eh igual titles[%i].year[%i]\n",i,j,k);
+							i++;
 							break;
 							//printf("insereriu %s no ano %i\n",titles[j].title,titles[j].year);
 							}
