@@ -46,9 +46,9 @@ Edition;
 
 /*-------------------------------------------------------------------------------------------------*/
 // data read and array data alocation
-void readInput(struct books bookList[])
+long readInput(struct books bookList[])
 {
-	FILE *file = fopen("teste100.txt", "r");
+	FILE *file = fopen("teste100k.txt", "r");
 	if (file == NULL)
 	{
 		printf("Erro ao abrir o arquivo\n");
@@ -79,7 +79,10 @@ void readInput(struct books bookList[])
 
 		idx++;
 	}
+
 	fclose(file);
+
+	return idx;
 }
 
 /*-------------------------------------------------------------------------------------------------*/
@@ -201,27 +204,27 @@ void editionFileGenerator(Books bookList[]){
 }
 
 /*-------------------------------------------------------------------------------------------------*/
-void titleFileGenerator(Books bookList[]){
+void titleFileGenerator(Books bookList[], long input){
 
-	Title *titles =(Title*) malloc(SIZE * sizeof(Title));//alloc a edition array
+	Title *titles =(Title*) malloc(input * sizeof(Title));//alloc a edition array
 
     if(titles == NULL){
 		printf("\nErro na alocacao\n");
 		getchar();
 	}
 	printf("alocou title\n");
-	for (int i=0;i<100;i++){
+	for (long i=0;i<input;i++){
    	 	if(i==0){
     	    strcpy(titles[i].title,bookList[i].title); //Se for a primeira posicao, insere nela
        		titles[i].year[i]=bookList[i].year;
 			printf("inseriu na primeira\n");
    		}
     	else{
-        	for(int j=0;j<SIZE;j++){
+        	for(long j=0;j<input;j++){
             	if(strcmp(bookList[i].title,titles[j].title)==0){ //Se o livro ja estiver na lista, verifica um posicao na lista de anos
                 	for (int k=0;k<30;k++){
                     	if(bookList[i].year == titles[j].year[k]){
-							printf("booklist [%i].year eh igual titles[%i].year[%i]\n",i,j,k);
+							printf("[%i].year eh igual titles[%i].year[%i]\n",i,j,k);
 							break;
 							//printf("insereriu %s no ano %i\n",titles[j].title,titles[j].year);
 							}
@@ -245,7 +248,6 @@ void titleFileGenerator(Books bookList[]){
         	}
     	}
 	}
-	printf("vai abrir books\n");
 
 	FILE *file = fopen("books.txt", "w");
 	
@@ -254,7 +256,7 @@ void titleFileGenerator(Books bookList[]){
 		return;
 	}
 	else{
-		for(int l=0;l<SIZE;l++){
+		for(long l=0;l<input;l++){
 			if(strlen(titles[l].title) == 0)break;
             fprintf(file,"%s",titles[l].title);
 			for(int n=0;n<30;n++){
@@ -271,14 +273,14 @@ void titleFileGenerator(Books bookList[]){
 
     printf("Arquivo livro salvo!\n");
 	
-	int g;
+	long g;
 
-	for(g=0;g<SIZE;g++){
+	for(g=0;g<input;g++){
 		if(strlen(titles[g].title) == 0){
 			break;
 		}
 	}
-	printf("Total de livros Publicados sem repeticao: %d\n",g);
+	printf("Total de livros Publicados sem repeticao: %li\n",g);
 
 
 }
@@ -301,7 +303,7 @@ int main()
 	printf("compartilhada com sucesso\n");
 	printf("leitor\n");	//leitura()
 
-	readInput(bookList);
+	long input = readInput(bookList);
 
 	pid1 = fork();
 	if (pid1 > 0)
@@ -320,7 +322,7 @@ int main()
 			else {
 				printf("edicao\n");	//edicao() 
 				editionFileGenerator(bookList);
-				titleFileGenerator(bookList);
+				titleFileGenerator(bookList, input);
 			}
 		}
 		else
